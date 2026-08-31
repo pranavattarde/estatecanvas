@@ -90,8 +90,7 @@ function LuxuryPost({ data }) {
 
           {/* Location */}
           <div className="location-row">
-            <MapPin className="loc-icon" aria-hidden="true"
-              style={{ width: 'clamp(8px,1.5cqw,15px)', height: 'clamp(8px,1.5cqw,15px)', flexShrink: 0 }} />
+            <MapPin className="loc-icon" aria-hidden="true" />
             <span className="location-text">{data.location}</span>
           </div>
 
@@ -210,9 +209,7 @@ function MinimalPost({ data }) {
 
         {/* Location */}
         <div className="location-row">
-          <MapPin aria-hidden="true"
-            style={{ color: '#555', flexShrink: 0, marginTop: '0.1em',
-                     width: 'clamp(8px,1.4cqw,14px)', height: 'clamp(8px,1.4cqw,14px)' }} />
+          <MapPin className="loc-icon" aria-hidden="true" />
           <span className="location-text">{data.location}</span>
         </div>
 
@@ -304,8 +301,7 @@ function MidnightPost({ data }) {
 
         {/* Location */}
         <div className="location-row">
-          <MapPin className="loc-icon" aria-hidden="true"
-            style={{ width: 'clamp(8px,1.5cqw,15px)', height: 'clamp(8px,1.5cqw,15px)', flexShrink: 0 }} />
+          <MapPin className="loc-icon" aria-hidden="true" />
           <span className="location-text">{data.location}</span>
         </div>
 

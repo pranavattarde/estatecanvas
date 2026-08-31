@@ -117,12 +117,6 @@ export default function App() {
     setAiError('');
 
     try {
-      const isDemoMock = typeof window !== 'undefined' && (
-        window.location.search.includes('mock=1') ||
-        window.location.search.includes('demo=1') ||
-        window.location.search.includes('ai=mock')
-      );
-
       const res = await fetch('/api/enhance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -131,7 +125,6 @@ export default function App() {
           location:     formData.location.trim(),
           price:        formData.price.trim(),
           highlights:   formData.highlights.trim(),
-          ...(isDemoMock ? { mock: true } : {}),
         }),
       });
 

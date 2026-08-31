@@ -3,6 +3,7 @@
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL        = 'openai/gpt-oss-20b';
+const FALLBACK_MODEL = 'qwen/qwen3.8-27b';
 const MAX_LEN      = 300; // max characters per input field
 
 function err(res, status, message) {
@@ -15,7 +16,7 @@ function sanitise(val) {
 }
 
 export default async function handler(req, res) {
-  // ── CORS pre-flight (harmless for Vercel but safe to include) ──
+  // ── CORS pre-flight ───────────────────────────────────────────
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -45,92 +46,55 @@ export default async function handler(req, res) {
 
   // ── Validate API key present ──────────────────────────────────
   const apiKey = process.env.GROQ_API_KEY;
-  const isMock = apiKey === 'mock' || body?.mock === true;
-
-  if (!apiKey && !isMock) {
+  if (!apiKey) {
     return err(res, 503, 'AI enhancement is not configured on this server.');
-  }
-
-  // ── Dev/Mock Response for testing without live Groq API key ──
-  if (isMock) {
-    const locMain = location.split(',')[0].trim();
-    return res.status(200).json({
-      headline: `Exclusive Living in ${locMain}`,
-      enhancedHighlights: [
-        `Spacious residence in ${locMain}`,
-        'Premium corner plot location',
-        'Ready for immediate possession',
-      ],
-      cta: 'Your dream residence awaits — schedule a visit today.',
-      caption: `Experience premium living with this exquisite ${propertyType} in ${location}. Offered at ${price}. Book your private viewing today.`,
-      hashtags: [
-        `#${locMain.replace(/\s+/g, '')}RealEstate`,
-        '#LuxuryLiving',
-        '#PropertyForSale',
-        '#DreamHome',
-        '#PremiumHomes',
-      ],
-    });
   }
 
   // ── Build prompt ─────────────────────────────────────────────
   const systemPrompt = `You are an expert Indian real-estate marketing copywriter.
-Your job is to transform raw property information into concise, premium and truthful marketing copy suitable for Instagram, WhatsApp and real-estate advertisements.
+Transform the provided property information into concise, premium marketing copy.
+Strict rules:
+- Strictly adhere to supplied property facts. Never invent unmentioned amenities.
+- Output ONLY a valid JSON object. No explanations, no markdown code blocks, no surrounding text.
 
-STRICT RULES:
-- Never invent property facts.
-- Never invent amenities.
-- Never change the supplied price.
-- Never change the supplied location.
-- Never claim metro connectivity, schools, hospitals, ROI, appreciation, security, clubhouse, swimming pool, possession dates, certifications or developer reputation unless explicitly supplied.
-- Do not use excessive hype.
-- Keep the copy concise.
-- Maintain a premium professional tone.
-- Preserve numerical information accurately.
-- Indian real estate context should be respected.
-
-Generate:
-- headline: Maximum 10 words.
-- enhancedHighlights: Exactly 3 to 5 concise highlights based ONLY on supplied information.
-- cta: Maximum 12 words.
-- caption: Approximately 40-70 words.
-- hashtags: Exactly 5 relevant hashtags.
-
-Return ONLY valid JSON. No markdown. No code fences. No commentary.
-Required structure:
+Required JSON structure:
 {
-  "headline": "string",
-  "enhancedHighlights": ["string","string","string"],
-  "cta": "string",
-  "caption": "string",
-  "hashtags": ["#Tag","#Tag","#Tag","#Tag","#Tag"]
+  "headline": "Marketing Headline (max 10 words)",
+  "enhancedHighlights": ["Refined highlight 1", "Refined highlight 2", "Refined highlight 3"],
+  "cta": "Call to action (max 12 words)",
+  "caption": "Social media caption (40-70 words)",
+  "hashtags": ["#Tag1", "#Tag2", "#Tag3", "#Tag4", "#Tag5"]
 }`;
 
-  const userPrompt = `Property & Type: ${propertyType}
-Location: ${location}
-Price: ${price}
-Highlights: ${highlights}`;
+  const userPrompt = `Property & Type: ${propertyType}\nLocation: ${location}\nPrice: ${price}\nHighlights: ${highlights}`;
 
   // ── Call Groq ────────────────────────────────────────────────
-  let groqRes;
-  try {
-    groqRes = await fetch(GROQ_API_URL, {
+  async function callGroq(modelToUse) {
+    return await fetch(GROQ_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: modelToUse,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user',   content: userPrompt   },
         ],
-        temperature:  0.6,
-        max_tokens:   700,
-        response_format: { type: 'json_object' },
+        temperature: 0.5,
+        max_tokens:  800,
       }),
     });
+  }
+
+  let groqRes;
+  try {
+    groqRes = await callGroq(MODEL);
+    if (!groqRes.ok && groqRes.status !== 429) {
+      console.warn(`[enhance] Primary model ${MODEL} returned ${groqRes.status}. Trying fallback model ${FALLBACK_MODEL}...`);
+      groqRes = await callGroq(FALLBACK_MODEL);
+    }
   } catch (fetchErr) {
     console.error('[enhance] Groq fetch error:', fetchErr.message);
     return err(res, 502, 'AI enhancement is temporarily unavailable.');
@@ -151,7 +115,7 @@ Highlights: ${highlights}`;
   try {
     groqBody = await groqRes.json();
   } catch {
-    return err(res, 502, 'AI returned an unexpected response.');
+    return err(res, 502, 'AI returned an unexpected response format.');
   }
 
   const rawContent = groqBody?.choices?.[0]?.message?.content;
@@ -162,9 +126,12 @@ Highlights: ${highlights}`;
   // ── Parse AI JSON ─────────────────────────────────────────────
   let aiData;
   try {
-    // Strip accidental markdown fences the model might still output
-    const cleaned = rawContent.replace(/```json|```/g, '').trim();
-    aiData = JSON.parse(cleaned);
+    // Extract JSON object enclosed in curly braces
+    const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No JSON object found in response');
+    }
+    aiData = JSON.parse(jsonMatch[0]);
   } catch {
     console.error('[enhance] Failed to parse AI JSON:', rawContent.slice(0, 200));
     return err(res, 502, 'AI returned malformed data. Please try again.');
@@ -184,10 +151,10 @@ Highlights: ${highlights}`;
 
   // ── Return clean result ──────────────────────────────────────
   return res.status(200).json({
-    headline:           headline.slice(0, 120),
+    headline:           headline.slice(0, 150),
     enhancedHighlights: enhancedHighlights.slice(0, 5).map(String),
-    cta:                cta.slice(0, 120),
-    caption:            caption.slice(0, 600),
+    cta:                cta.slice(0, 150),
+    caption:            caption.slice(0, 700),
     hashtags:           hashtags.slice(0, 5).map(String),
   });
 }
