@@ -1,0 +1,1381 @@
+/* ============================================================
+   EstateCanvas — Design System & Global Styles
+   ============================================================ */
+
+/* --- Reset & Base ------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Palette */
+  --color-bg:          #f5f3f0;
+  --color-surface:     #ffffff;
+  --color-surface-2:   #eeebe6;
+  --color-border:      #e2dbd3;
+  --color-border-2:    #c9c0b5;
+
+  --color-charcoal:    #1a1714;
+  --color-charcoal-2:  #3d3833;
+  --color-charcoal-3:  #6e6660;
+  --color-muted:       #a09890;
+
+  --color-gold:        #b8935a;       /* warm, restrained gold — not bright */
+  --color-gold-light:  #d4aa72;
+  --color-gold-pale:   #f0e4cc;
+
+  --color-success:     #3d6b4a;
+  --color-error:       #a33535;
+
+  /* Typography */
+  --font-sans:    'Inter', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-elegant: 'Cormorant Garamond', Georgia, serif;
+
+  /* Spacing scale */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* Radius */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+
+  /* Shadows */
+  --sh-sm: 0 1px 3px rgba(26,23,20,0.06), 0 1px 2px rgba(26,23,20,0.04);
+  --sh-md: 0 4px 16px rgba(26,23,20,0.08), 0 2px 4px rgba(26,23,20,0.04);
+  --sh-lg: 0 8px 32px rgba(26,23,20,0.10), 0 4px 8px rgba(26,23,20,0.05);
+  --sh-xl: 0 20px 60px rgba(26,23,20,0.14), 0 8px 16px rgba(26,23,20,0.06);
+
+  /* Transitions */
+  --t-fast: 120ms ease;
+  --t-base: 200ms ease;
+
+  /* Layout */
+  --max-width: 1380px;
+  --header-h:  60px;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-charcoal);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--sh-sm);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--sp-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--color-charcoal);
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-logo-mark svg {
+  width: 18px;
+  height: 18px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-charcoal);
+  line-height: 1;
+}
+
+.brand-caption {
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  line-height: 1;
+}
+
+.header-badge {
+  font-size: 0.7rem;
+  color: var(--color-charcoal-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  padding: 4px 12px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   WORKSPACE LAYOUT
+   ============================================================ */
+
+.workspace {
+  flex: 1;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--sp-8) var(--sp-6);
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: var(--sp-8);
+  align-items: start;
+}
+
+/* ============================================================
+   FORM PANEL
+   ============================================================ */
+
+.form-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-md);
+  padding: var(--sp-8) var(--sp-8);
+  position: sticky;
+  top: calc(var(--header-h) + var(--sp-6));
+}
+
+.form-heading {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: var(--sp-1);
+}
+
+.form-subheading {
+  font-size: 0.82rem;
+  color: var(--color-charcoal-3);
+  margin-bottom: var(--sp-6);
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--sp-5) 0;
+}
+
+.form-section-label {
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: var(--sp-2);
+}
+
+/* --- Template Selector ------------------------------------- */
+
+.template-selector {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+}
+
+.template-btn {
+  flex: 1;
+  padding: 9px var(--sp-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-charcoal-3);
+  cursor: pointer;
+  transition: border-color var(--t-base), background var(--t-base), color var(--t-base);
+  text-align: center;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.template-btn:hover {
+  border-color: var(--color-charcoal-3);
+  color: var(--color-charcoal);
+}
+
+.template-btn.active {
+  border-color: var(--color-charcoal);
+  background: var(--color-charcoal);
+  color: #fff;
+}
+
+/* --- Fields ------------------------------------------------ */
+
+.fields-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-6);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-charcoal-2);
+  letter-spacing: 0.01em;
+}
+
+.field-label span {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+.field-input,
+.field-textarea {
+  width: 100%;
+  padding: 10px var(--sp-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--color-charcoal);
+  background: var(--color-surface);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+  outline: none;
+  resize: none;
+  line-height: 1.45;
+}
+
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: var(--color-muted);
+}
+
+.field-input:focus,
+.field-textarea:focus {
+  border-color: var(--color-charcoal-2);
+  box-shadow: 0 0 0 3px rgba(26, 23, 20, 0.07);
+}
+
+.field-input.error,
+.field-textarea.error {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(163, 53, 53, 0.08);
+}
+
+.field-error {
+  font-size: 0.73rem;
+  color: var(--color-error);
+  letter-spacing: 0.01em;
+}
+
+/* --- Action buttons ---------------------------------------- */
+
+.form-actions {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 11px var(--sp-5);
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: background var(--t-base), border-color var(--t-base),
+              color var(--t-base), box-shadow var(--t-base), transform var(--t-base);
+  white-space: nowrap;
+  text-decoration: none;
+  outline: none;
+  letter-spacing: 0.015em;
+  line-height: 1;
+}
+
+.btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(26, 23, 20, 0.18);
+}
+
+.btn-primary {
+  flex: 1;
+  background: var(--color-charcoal);
+  color: #fff;
+  border-color: var(--color-charcoal);
+}
+
+.btn-primary:hover {
+  background: #2d2925;
+  border-color: #2d2925;
+}
+
+.btn-primary:active {
+  transform: scale(0.99);
+}
+
+.btn-primary.success {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-charcoal-3);
+  border-color: var(--color-border);
+}
+
+.btn-ghost:hover {
+  background: var(--color-surface-2);
+  color: var(--color-charcoal);
+  border-color: var(--color-border-2);
+}
+
+/* ============================================================
+   PREVIEW PANEL
+   ============================================================ */
+
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.preview-label {
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.preview-size-info {
+  font-size: 0.7rem;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  padding: 3px 10px;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.preview-wrapper {
+  background: #e8e4de;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-scale-container {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1 / 1;
+}
+
+.property-post-outer {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: var(--sh-xl);
+}
+
+/* ============================================================
+   DOWNLOAD AREA
+   ============================================================ */
+
+.download-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.btn-download {
+  width: 100%;
+  background: var(--color-surface);
+  color: var(--color-charcoal-2);
+  border: 1.5px solid var(--color-border-2);
+  font-size: 0.82rem;
+  padding: 10px var(--sp-5);
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  transition: background var(--t-base), color var(--t-base), border-color var(--t-base);
+  letter-spacing: 0.01em;
+  outline: none;
+}
+
+.btn-download:hover:not(:disabled) {
+  background: var(--color-charcoal);
+  color: #fff;
+  border-color: var(--color-charcoal);
+}
+
+.btn-download:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-download:focus-visible {
+  box-shadow: 0 0 0 3px rgba(26, 23, 20, 0.18);
+}
+
+.download-note {
+  font-size: 0.68rem;
+  color: var(--color-muted);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   SITE FOOTER
+   ============================================================ */
+
+.site-footer {
+  text-align: center;
+  padding: var(--sp-5) var(--sp-6);
+  font-size: 0.76rem;
+  color: var(--color-muted);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  letter-spacing: 0.01em;
+}
+
+.site-footer strong {
+  color: var(--color-charcoal-2);
+  font-weight: 600;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.toast-area {
+  position: fixed;
+  bottom: var(--sp-6);
+  right: var(--sp-6);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--color-charcoal);
+  color: #fff;
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-md);
+  font-size: 0.82rem;
+  font-weight: 500;
+  box-shadow: var(--sh-lg);
+  letter-spacing: 0.01em;
+  animation: slideInToast 0.25s ease, fadeOutToast 0.3s ease 2.2s forwards;
+}
+
+.toast.success {
+  background: var(--color-success);
+}
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOutToast {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ============================================================
+   PROPERTY POST — BASE
+   ============================================================ */
+
+.property-post {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================
+   LUXURY TEMPLATE
+   ============================================================
+
+   Composition:
+   ┌─────────────────────────────────────────┐
+   │ 4px charcoal rule                       │
+   ├──────────────────────────┬──────────────┤
+   │  NS REALTY   eyebrow     │              │
+   │  ─────────               │  arch decor  │
+   │  big headline            │  right panel │
+   │                          │              │
+   │  📍 Location             │              │
+   │                          │              │
+   │  PRICE LABEL             │              │
+   │  ₹2.5 Cr onwards         │              │
+   │                          │              │
+   │  [chip] [chip] [chip]    │              │
+   ├──────────────────────────┴──────────────┤
+   │ footer: NS REALTY          📞 number    │
+   └─────────────────────────────────────────┘
+   ============================================================ */
+
+.post-luxury {
+  background: #f7f1e8;
+  color: #1a1714;
+  font-family: var(--font-sans);
+}
+
+/* Background decoration layer */
+.post-luxury .post-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Top rule */
+.post-luxury .post-rule {
+  height: 4px;
+  background: #1a1714;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* Two-column inner layout */
+.post-luxury .post-inner {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 28%;
+  position: relative;
+  z-index: 2;
+  min-height: 0;
+}
+
+/* Left column — all the content */
+.post-luxury .post-left {
+  display: flex;
+  flex-direction: column;
+  padding: 6% 6% 5% 7%;
+  border-right: 1px solid rgba(26, 23, 20, 0.10);
+  overflow: hidden;
+}
+
+/* Right column — architectural decorative panel */
+.post-luxury .post-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6% 4%;
+  overflow: hidden;
+  background: rgba(26, 23, 20, 0.025);
+}
+
+/* Brand area */
+.post-luxury .brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7%;
+}
+
+.post-luxury .brand-ns {
+  font-family: var(--font-sans);
+  font-size: clamp(9px, 2cqw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #1a1714;
+}
+
+.post-luxury .brand-sep {
+  width: 1px;
+  height: clamp(12px, 2.2cqw, 22px);
+  background: #b8935a;
+  flex-shrink: 0;
+}
+
+.post-luxury .brand-sub {
+  font-size: clamp(5.5px, 0.95cqw, 9.5px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7a6e64;
+  font-weight: 400;
+}
+
+/* Section eyebrow */
+.post-luxury .eyebrow {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #b8935a;
+  margin-bottom: clamp(6px, 1.2cqw, 12px);
+}
+
+/* Title rule */
+.post-luxury .title-rule {
+  width: clamp(24px, 4.5cqw, 44px);
+  height: 1.5px;
+  background: #b8935a;
+  margin-bottom: clamp(8px, 1.5cqw, 15px);
+}
+
+/* Property headline */
+.post-luxury .property-title {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 3.8cqw, 38px);
+  font-weight: 600;
+  line-height: 1.18;
+  color: #1a1714;
+  margin-bottom: 5%;
+  letter-spacing: -0.015em;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.post-luxury .property-title em {
+  font-style: italic;
+  color: #1a1714;
+}
+
+/* Location */
+.post-luxury .location-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 6%;
+}
+
+.post-luxury .loc-icon {
+  color: #b8935a;
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+.post-luxury .location-text {
+  font-size: clamp(7px, 1.4cqw, 14px);
+  color: #5a514a;
+  line-height: 1.4;
+  word-break: break-word;
+  letter-spacing: 0.01em;
+}
+
+/* Price */
+.post-luxury .price-block {
+  margin-bottom: 6%;
+}
+
+.post-luxury .price-label {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7a6e64;
+  margin-bottom: 3px;
+}
+
+.post-luxury .price-value {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 4.8cqw, 48px);
+  font-weight: 700;
+  color: #1a1714;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  word-break: break-all;
+}
+
+/* Highlights */
+.post-luxury .highlights-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.post-luxury .highlight-chip {
+  background: transparent;
+  border: 1px solid rgba(184, 147, 90, 0.45);
+  border-radius: 2px;
+  padding: clamp(2px, 0.45cqw, 4px) clamp(6px, 1.1cqw, 11px);
+  font-size: clamp(5.5px, 1cqw, 10px);
+  font-weight: 500;
+  color: #5a514a;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Right panel SVG decor */
+.post-luxury .arch-svg {
+  width: 100%;
+  max-width: clamp(60px, 16cqw, 160px);
+  opacity: 0.55;
+}
+
+/* Footer */
+.post-luxury .post-footer {
+  background: #1a1714;
+  padding: clamp(8px, 2.8cqw, 28px) 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.post-luxury .footer-brand {
+  font-family: var(--font-sans);
+  font-size: clamp(7.5px, 1.7cqw, 17px);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f7f1e8;
+}
+
+.post-luxury .footer-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.post-luxury .footer-cta {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b8935a;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.post-luxury .footer-phone {
+  font-size: clamp(7px, 1.4cqw, 14px);
+  font-weight: 600;
+  color: #f7f1e8;
+  display: block;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   MINIMAL TEMPLATE
+   ============================================================
+
+   Swiss editorial / ITC typeface feel.
+   Near-total restraint — structure through typography alone.
+   ============================================================ */
+
+.post-minimal {
+  background: #ffffff;
+  color: #0a0a0a;
+  font-family: var(--font-sans);
+}
+
+.post-minimal .post-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8% 8% 0 8%;
+  overflow: hidden;
+}
+
+/* Brand row */
+.post-minimal .brand-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 5%;
+  margin-bottom: 6%;
+  border-bottom: 2px solid #0a0a0a;
+}
+
+.post-minimal .brand-ns {
+  font-family: var(--font-sans);
+  font-size: clamp(11px, 2.4cqw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+}
+
+.post-minimal .brand-tagline {
+  font-size: clamp(6px, 0.95cqw, 9.5px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 400;
+}
+
+/* Eyebrow */
+.post-minimal .eyebrow {
+  font-size: clamp(5.5px, 0.85cqw, 8.5px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: clamp(6px, 1.2cqw, 12px);
+}
+
+/* Title */
+.post-minimal .property-title {
+  font-family: var(--font-sans);
+  font-size: clamp(17px, 4.3cqw, 43px);
+  font-weight: 800;
+  line-height: 1.08;
+  color: #0a0a0a;
+  margin-bottom: 4%;
+  letter-spacing: -0.03em;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Location */
+.post-minimal .location-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 5%;
+}
+
+.post-minimal .location-text {
+  font-size: clamp(7.5px, 1.4cqw, 14px);
+  color: #555;
+  line-height: 1.4;
+  word-break: break-word;
+  letter-spacing: 0.005em;
+}
+
+/* Highlights */
+.post-minimal .highlights-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 5%;
+}
+
+.post-minimal .highlight-chip {
+  border: 1.5px solid #0a0a0a;
+  padding: clamp(2px, 0.4cqw, 4px) clamp(6px, 1.1cqw, 11px);
+  font-size: clamp(5.5px, 1cqw, 10px);
+  font-weight: 600;
+  color: #0a0a0a;
+  white-space: nowrap;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Large number — bold price treatment */
+.post-minimal .price-section {
+  margin-top: auto;
+  padding-top: 5%;
+  padding-bottom: 7%;
+}
+
+.post-minimal .price-label {
+  font-size: clamp(5.5px, 0.85cqw, 8.5px);
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 3px;
+}
+
+.post-minimal .price-value {
+  font-family: var(--font-sans);
+  font-size: clamp(22px, 5.6cqw, 56px);
+  font-weight: 900;
+  color: #0a0a0a;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  word-break: break-all;
+}
+
+/* Footer */
+.post-minimal .post-footer {
+  background: #0a0a0a;
+  padding: clamp(8px, 2.5cqw, 25px) 8%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.post-minimal .footer-brand {
+  font-family: var(--font-sans);
+  font-size: clamp(7px, 1.5cqw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.post-minimal .footer-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.post-minimal .footer-cta {
+  font-size: clamp(5px, 0.85cqw, 8.5px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.post-minimal .footer-phone {
+  font-size: clamp(7px, 1.3cqw, 13px);
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   MIDNIGHT TEMPLATE
+   ============================================================
+
+   Deep charcoal field. Warm ivory text.
+   Gold used only as a whisper — rule line, pip, chip borders.
+   Rich editorial serif for the headline.
+   ============================================================ */
+
+.post-midnight {
+  background: #0d0c0a;
+  color: #ede7d6;
+  font-family: var(--font-sans);
+}
+
+/* Background decoration */
+.post-midnight .post-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.post-midnight .bg-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 147, 90, 0.09);
+}
+
+/* Gold top rule */
+.post-midnight .post-rule {
+  height: 2px;
+  background: #b8935a;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* Content */
+.post-midnight .post-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 6% 7%;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Brand */
+.post-midnight .brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7%;
+}
+
+.post-midnight .brand-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post-midnight .brand-ns {
+  font-family: var(--font-sans);
+  font-size: clamp(9px, 2cqw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ede7d6;
+}
+
+.post-midnight .brand-pip {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #b8935a;
+  flex-shrink: 0;
+}
+
+.post-midnight .brand-sub {
+  font-size: clamp(5.5px, 0.95cqw, 9.5px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b8935a;
+  font-weight: 400;
+}
+
+/* Gold pip ornament (right side) */
+.post-midnight .brand-ornament {
+  width: clamp(12px, 2.2cqw, 22px);
+  height: clamp(12px, 2.2cqw, 22px);
+  opacity: 0.7;
+}
+
+/* Eyebrow + rule */
+.post-midnight .eyebrow {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #b8935a;
+  margin-bottom: clamp(5px, 1cqw, 10px);
+}
+
+.post-midnight .title-rule {
+  width: clamp(20px, 4cqw, 40px);
+  height: 1px;
+  background: #b8935a;
+  opacity: 0.6;
+  margin-bottom: clamp(8px, 1.5cqw, 15px);
+}
+
+/* Headline — uses Cormorant for luxury brochure feel */
+.post-midnight .property-title {
+  font-family: var(--font-elegant);
+  font-size: clamp(19px, 4.8cqw, 48px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: #ede7d6;
+  margin-bottom: 5%;
+  letter-spacing: 0.005em;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Location */
+.post-midnight .location-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 6%;
+}
+
+.post-midnight .loc-icon {
+  color: #b8935a;
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+.post-midnight .location-text {
+  font-size: clamp(7px, 1.35cqw, 13.5px);
+  color: #a09686;
+  line-height: 1.45;
+  word-break: break-word;
+  letter-spacing: 0.02em;
+}
+
+/* Price */
+.post-midnight .price-block {
+  margin-bottom: 6%;
+}
+
+.post-midnight .price-label {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #b8935a;
+  margin-bottom: 3px;
+}
+
+.post-midnight .price-value {
+  font-family: var(--font-elegant);
+  font-size: clamp(22px, 5.5cqw, 55px);
+  font-weight: 600;
+  color: #ede7d6;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  word-break: break-all;
+}
+
+/* Highlights */
+.post-midnight .highlights-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.post-midnight .highlight-chip {
+  border: 1px solid rgba(184, 147, 90, 0.35);
+  border-radius: 1px;
+  padding: clamp(3px, 0.5cqw, 5px) clamp(7px, 1.2cqw, 12px);
+  font-size: clamp(5.5px, 1cqw, 10px);
+  font-weight: 400;
+  color: #b8935a;
+  white-space: nowrap;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Footer */
+.post-midnight .post-footer {
+  background: rgba(184, 147, 90, 0.07);
+  border-top: 1px solid rgba(184, 147, 90, 0.18);
+  padding: clamp(8px, 2.8cqw, 28px) 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.post-midnight .footer-brand {
+  font-family: var(--font-sans);
+  font-size: clamp(7.5px, 1.7cqw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ede7d6;
+}
+
+.post-midnight .footer-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.post-midnight .footer-cta {
+  font-size: clamp(5px, 0.9cqw, 9px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #b8935a;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.post-midnight .footer-phone {
+  font-size: clamp(7px, 1.4cqw, 14px);
+  font-weight: 600;
+  color: #ede7d6;
+  display: block;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .workspace {
+    grid-template-columns: 360px 1fr;
+    gap: var(--sp-6);
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    padding: var(--sp-6) var(--sp-4);
+    gap: var(--sp-6);
+  }
+
+  .form-panel {
+    position: static;
+  }
+
+  .post-scale-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-inner {
+    padding: 0 var(--sp-4);
+  }
+
+  .brand-caption {
+    display: none;
+  }
+
+  .header-badge {
+    font-size: 0.62rem;
+    padding: 3px 9px;
+  }
+
+  .workspace {
+    padding: var(--sp-4) var(--sp-3);
+  }
+
+  .form-panel {
+    padding: var(--sp-5);
+    border-radius: var(--r-md);
+  }
+
+  .form-heading {
+    font-size: 1.25rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+
+  .btn-ghost {
+    order: 2;
+  }
+
+  .btn-primary {
+    order: 1;
+    flex: none;
+    width: 100%;
+  }
+
+  .preview-wrapper {
+    padding: var(--sp-3);
+  }
+
+  .post-scale-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .template-selector {
+    gap: var(--sp-1);
+  }
+
+  .template-btn {
+    font-size: 0.72rem;
+    padding: 8px var(--sp-2);
+  }
+}
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
