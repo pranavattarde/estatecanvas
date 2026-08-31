@@ -3,11 +3,26 @@ import { MapPin } from 'lucide-react';
 
 /* ─── helpers ──────────────────────────────────────────────── */
 
-function splitHighlights(str) {
-  return str
-    .split(/[·•|\/]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
+function splitHighlights(raw) {
+  if (!raw || !raw.trim()) return [];
+
+  // Normalise bullet/dot lookalikes → standard middle dot U+00B7
+  const str = raw.replace(/[\u2022\u2024\u22C5\u2027]/g, '\u00B7').trim();
+
+  let parts;
+  if (/[\u00B7|]/.test(str)) {
+    // Middle dot · or pipe | — the primary separators
+    parts = str.split(/\s*[\u00B7|]\s*/);
+  } else if (/\s[-\/]\s/.test(str)) {
+    // " - " or " / " space-padded: safe — "sq.ft" is never split
+    parts = str.split(/\s[-\/]\s/);
+  } else if (/,/.test(str)) {
+    parts = str.split(/\s*,\s*/);
+  } else {
+    parts = [str];
+  }
+
+  return parts.map((s) => s.trim()).filter(Boolean);
 }
 
 /** Wrap "4 BHK" portion in <em> for Luxury italic accent */
@@ -52,10 +67,12 @@ function LuxuryPost({ data }) {
           </div>
 
           {/* Eyebrow + rule */}
-          <p className="eyebrow">Exclusive Property</p>
+          <p className="eyebrow">
+            {data.aiHeadline ? data.aiHeadline : 'Exclusive Property'}
+          </p>
           <div className="title-rule" />
 
-          {/* Headline */}
+          {/* Headline — always the original property name */}
           <h2 className="property-title">{titleParts(data.propertyType)}</h2>
 
           {/* Location */}
@@ -65,7 +82,7 @@ function LuxuryPost({ data }) {
             <span className="location-text">{data.location}</span>
           </div>
 
-          {/* Price */}
+          {/* Price — never changed by AI */}
           <div className="price-block">
             <p className="price-label">Starting Price</p>
             <p className="price-value">{data.price}</p>
@@ -139,7 +156,9 @@ function LuxuryPost({ data }) {
       <footer className="post-footer">
         <span className="footer-brand">NS REALTY</span>
         <div className="footer-right">
-          <span className="footer-cta">Schedule a Visit</span>
+          <span className="footer-cta">
+            {data.aiCta ? data.aiCta : 'Schedule a Visit'}
+          </span>
           <span className="footer-phone">+91 98765 43210</span>
         </div>
       </footer>
@@ -166,9 +185,11 @@ function MinimalPost({ data }) {
         </div>
 
         {/* Eyebrow */}
-        <p className="eyebrow">Property Listing</p>
+        <p className="eyebrow">
+          {data.aiHeadline ? data.aiHeadline : 'Property Listing'}
+        </p>
 
-        {/* Headline */}
+        {/* Headline — always the original property name */}
         <h2 className="property-title">{data.propertyType}</h2>
 
         {/* Location */}
@@ -197,7 +218,9 @@ function MinimalPost({ data }) {
       <footer className="post-footer">
         <span className="footer-brand">NS REALTY</span>
         <div className="footer-right">
-          <span className="footer-cta">Schedule a Visit</span>
+          <span className="footer-cta">
+            {data.aiCta ? data.aiCta : 'Schedule a Visit'}
+          </span>
           <span className="footer-phone">+91 98765 43210</span>
         </div>
       </footer>
@@ -242,10 +265,12 @@ function MidnightPost({ data }) {
         </div>
 
         {/* Eyebrow + rule */}
-        <p className="eyebrow">Featured Property</p>
+        <p className="eyebrow">
+          {data.aiHeadline ? data.aiHeadline : 'Featured Property'}
+        </p>
         <div className="title-rule" />
 
-        {/* Headline */}
+        {/* Headline — always the original property name */}
         <h2 className="property-title">{data.propertyType}</h2>
 
         {/* Location */}
@@ -273,7 +298,9 @@ function MidnightPost({ data }) {
       <footer className="post-footer">
         <span className="footer-brand">NS REALTY</span>
         <div className="footer-right">
-          <span className="footer-cta">Schedule a Visit</span>
+          <span className="footer-cta">
+            {data.aiCta ? data.aiCta : 'Schedule a Visit'}
+          </span>
           <span className="footer-phone">+91 98765 43210</span>
         </div>
       </footer>

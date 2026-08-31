@@ -3,11 +3,12 @@ import { useState, useRef, useCallback } from 'react';
 import { Download } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
-import Header from './components/Header.jsx';
+import Header      from './components/Header.jsx';
 import PropertyForm from './components/PropertyForm.jsx';
 import PropertyPost from './components/PropertyPost.jsx';
+import AiEnhancer  from './components/AiEnhancer.jsx';
 
-/* ---------- constants ------------------------------------- */
+/* ── constants ─────────────────────────────────────────────── */
 
 const DEFAULT_FORM = {
   propertyType: '4 BHK Luxury Villa, Ansal Golf City',
@@ -25,7 +26,7 @@ function validate(formData) {
   return errs;
 }
 
-/* ---------- Toast component ------------------------------- */
+/* ── Toast ─────────────────────────────────────────────────── */
 
 function Toast({ messages }) {
   return (
@@ -39,19 +40,27 @@ function Toast({ messages }) {
   );
 }
 
-/* ========================================================== */
+/* ── App ────────────────────────────────────────────────────── */
 
 export default function App() {
-  const [formData, setFormData]         = useState({ ...DEFAULT_FORM });
-  const [template, setTemplate]         = useState('luxury');
-  const [errors, setErrors]             = useState({});
-  const [generateStatus, setGenStatus]  = useState('idle'); // 'idle' | 'success'
-  const [downloading, setDownloading]   = useState(false);
-  const [toasts, setToasts]             = useState([]);
+  /* Task 1 state — unchanged */
+  const [formData, setFormData]        = useState({ ...DEFAULT_FORM });
+  const [template, setTemplate]        = useState('luxury');
+  const [transitionKey, setTransKey]   = useState(0);
+  const [errors, setErrors]            = useState({});
+  const [generateStatus, setGenStatus] = useState('idle');
+  const [downloading, setDownloading]  = useState(false);
+  const [toasts, setToasts]            = useState([]);
+
+  /* Task 2 — AI state */
+  const [aiStatus, setAiStatus]   = useState('idle');   // 'idle'|'loading'|'success'|'error'
+  const [aiData,   setAiData]     = useState(null);     // { headline, enhancedHighlights, cta, caption, hashtags }
+  const [aiError,  setAiError]    = useState('');
+  const [aiMode,   setAiMode]     = useState('original'); // 'original' | 'ai'
 
   const postRef = useRef(null);
 
-  /* ---- helpers ------------------------------------------ */
+  /* ── helpers ──────────────────────────────────────────────── */
 
   const addToast = useCallback((text, type = 'default') => {
     const id = Date.now();
@@ -59,55 +68,143 @@ export default function App() {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 2700);
   }, []);
 
-  /* ---- form handlers ------------------------------------ */
+  /* ── Task 1 handlers ─────────────────────────────────────── */
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear field error on change
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
   const handleReset = () => {
     setFormData({ ...DEFAULT_FORM });
+    setTemplate('luxury');
+    setTransKey((k) => k + 1);
     setErrors({});
     setGenStatus('idle');
+    // Reset AI state too
+    setAiStatus('idle');
+    setAiData(null);
+    setAiError('');
+    setAiMode('original');
   };
 
   const handleGenerate = () => {
     const errs = validate(formData);
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     setErrors({});
     setGenStatus('success');
     addToast('✓ Post ready — looking great!', 'success');
     setTimeout(() => setGenStatus('idle'), 2500);
   };
 
-  /* ---- template switcher -------------------------------- */
-
   const handleTemplateChange = (t) => {
+    if (t === template) return;
     setTemplate(t);
+    setTransKey((k) => k + 1);
   };
 
-  /* ---- download PNG ------------------------------------- */
+  /* ── Task 2 handlers ─────────────────────────────────────── */
+
+  const handleEnhance = useCallback(async () => {
+    // Client-side guard — all four fields must have values
+    const errs = validate(formData);
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
+    setErrors({});
+    setAiStatus('loading');
+    setAiError('');
+
+    try {
+      const isDemoMock = typeof window !== 'undefined' && (
+        window.location.search.includes('mock=1') ||
+        window.location.search.includes('demo=1') ||
+        window.location.search.includes('ai=mock')
+      );
+
+      const res = await fetch('/api/enhance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyType: formData.propertyType.trim(),
+          location:     formData.location.trim(),
+          price:        formData.price.trim(),
+          highlights:   formData.highlights.trim(),
+          ...(isDemoMock ? { mock: true } : {}),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data?.error || 'AI enhancement is temporarily unavailable.';
+        setAiStatus('error');
+        setAiError(msg);
+        return;
+      }
+
+      setAiData(data);
+      setAiStatus('success');
+      setAiMode('original'); // Start in original mode so user sees both
+      addToast('✓ AI copy generated!', 'success');
+    } catch {
+      setAiStatus('error');
+      setAiError('AI enhancement is temporarily unavailable. Your original post is still ready to use.');
+    }
+  }, [formData, addToast]);
+
+  const handleAiApply = () => {
+    setAiMode('ai');
+    setTransKey((k) => k + 1); // trigger post transition
+    addToast('AI copy applied to preview.', 'success');
+  };
+
+  const handleAiClear = () => {
+    setAiData(null);
+    setAiStatus('idle');
+    setAiError('');
+    setAiMode('original');
+  };
+
+  const handleModeSwitch = (mode) => {
+    if (mode === aiMode) return;
+    setAiMode(mode);
+    setTransKey((k) => k + 1);
+  };
+
+  /* ── Compute what the post actually renders ─────────────────
+     Original mode: raw formData (Task 1 — always works)
+     AI mode: same formData but with aiHeadline + aiHighlights + aiCta
+     Location and price are NEVER replaced by AI values.
+  ───────────────────────────────────────────────────────────── */
+  const postData = (() => {
+    if (aiMode === 'ai' && aiData) {
+      return {
+        ...formData,
+        // Replace the headline shown in the post with the AI marketing headline
+        aiHeadline: aiData.headline,
+        // Replace highlight chips with AI-enhanced highlights
+        highlights: aiData.enhancedHighlights.join(' · '),
+        // AI CTA shown in footer instead of default
+        aiCta: aiData.cta,
+      };
+    }
+    return formData;
+  })();
+
+  /* ── Download PNG ──────────────────────────────────────────── */
 
   const handleDownload = useCallback(async () => {
     if (!postRef.current || downloading) return;
-
     setDownloading(true);
     try {
-      // Capture at 3× pixel ratio — yields a crisp ~3240×3240 px image
       const dataUrl = await toPng(postRef.current, {
         pixelRatio: 3,
         quality: 1,
         cacheBust: true,
-        style: {
-          borderRadius: '0',
-        },
+        style: { borderRadius: '0' },
       });
-
       const link = document.createElement('a');
       link.download = 'estatecanvas-property-post.png';
       link.href = dataUrl;
@@ -121,46 +218,84 @@ export default function App() {
     }
   }, [downloading, addToast]);
 
-  /* ---- render ------------------------------------------- */
+  /* ── Render ─────────────────────────────────────────────────── */
+
+  const showModeSwitch = aiStatus === 'success' && aiData;
 
   return (
     <div className="app-wrapper">
       <Header />
 
       <main className="workspace">
-        {/* LEFT — Form panel */}
-        <PropertyForm
-          formData={formData}
-          onChange={handleChange}
-          onReset={handleReset}
-          onGenerate={handleGenerate}
-          template={template}
-          onTemplateChange={handleTemplateChange}
-          errors={errors}
-          generateStatus={generateStatus}
-        />
+        {/* LEFT — Form + AI enhancer */}
+        <div className="form-column">
+          <PropertyForm
+            formData={formData}
+            onChange={handleChange}
+            onReset={handleReset}
+            onGenerate={handleGenerate}
+            template={template}
+            onTemplateChange={handleTemplateChange}
+            errors={errors}
+            generateStatus={generateStatus}
+          />
 
-        {/* RIGHT — Preview panel */}
+          <AiEnhancer
+            formData={formData}
+            aiData={aiData}
+            aiStatus={aiStatus}
+            aiError={aiError}
+            onEnhance={handleEnhance}
+            onApply={handleAiApply}
+            onClear={handleAiClear}
+          />
+        </div>
+
+        {/* RIGHT — Preview */}
         <div className="preview-panel">
           <div className="preview-header">
             <span className="preview-label">Live Preview</span>
-            <span className="preview-size-info">1080 × 1080</span>
+            <div className="preview-header-right">
+              {/* Original / AI mode switcher — only shown when AI results exist */}
+              {showModeSwitch && (
+                <div className="mode-switcher" role="group" aria-label="Switch between original and AI-enhanced preview">
+                  <button
+                    type="button"
+                    className={`mode-btn${aiMode === 'original' ? ' active' : ''}`}
+                    onClick={() => handleModeSwitch('original')}
+                    aria-pressed={aiMode === 'original'}
+                  >
+                    Original
+                  </button>
+                  <button
+                    type="button"
+                    className={`mode-btn${aiMode === 'ai' ? ' active' : ''}`}
+                    onClick={() => handleModeSwitch('ai')}
+                    aria-pressed={aiMode === 'ai'}
+                  >
+                    AI Enhanced
+                  </button>
+                </div>
+              )}
+              <span className="preview-size-info">1080 × 1080</span>
+            </div>
           </div>
 
           <div className="preview-wrapper">
             <div className="post-scale-container">
-              {/* ref captures the post element for PNG export */}
               <div
                 ref={postRef}
                 className="property-post-outer"
                 style={{ containerType: 'size' }}
               >
-                <PropertyPost data={formData} template={template} />
+                <div key={transitionKey} className="post-enter">
+                  <PropertyPost data={postData} template={template} />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Download button */}
+          {/* Download */}
           <div className="download-area">
             <button
               type="button"
@@ -193,13 +328,14 @@ export default function App() {
               )}
             </button>
             <p className="download-note">
-              Exports at 2× resolution for crisp social media use.
+              {showModeSwitch
+                ? `Exports ${aiMode === 'ai' ? 'AI-enhanced' : 'original'} post · 3240 × 3240 px`
+                : 'Exports at 3× resolution — 3240 × 3240 px.'}
             </p>
           </div>
         </div>
       </main>
 
-      {/* Site footer */}
       <footer className="site-footer">
         <strong>EstateCanvas</strong> — Property Post Maker &nbsp;·&nbsp; Built with ❤️ by Pranav Attarde
       </footer>
