@@ -245,6 +245,7 @@ export default function App() {
             aiData={aiData}
             aiStatus={aiStatus}
             aiError={aiError}
+            isApplied={aiMode === 'ai'}
             onEnhance={handleEnhance}
             onApply={handleAiApply}
             onClear={handleAiClear}

@@ -29,7 +29,7 @@ function validate(formData) {
 
 /* ── sub-components ────────────────────────────────────────── */
 
-function AiResultPanel({ aiData, onApply, onClear }) {
+function AiResultPanel({ aiData, isApplied, onApply, onClear }) {
   const [copyState, setCopyState] = useState('idle'); // 'idle' | 'copied'
 
   const handleCopyCaption = useCallback(async () => {
@@ -126,11 +126,12 @@ function AiResultPanel({ aiData, onApply, onClear }) {
 
         <button
           type="button"
-          className="btn btn-apply-ai"
+          className={`btn btn-apply-ai${isApplied ? ' applied' : ''}`}
           onClick={onApply}
           id="btn-apply-ai"
+          aria-label={isApplied ? 'AI copy is currently active on post' : 'Apply AI copy to post'}
         >
-          Apply AI Copy
+          {isApplied ? '✓ AI Copy Active' : 'Apply AI Copy'}
         </button>
       </div>
     </div>
@@ -144,6 +145,7 @@ export default function AiEnhancer({
   aiData,
   aiStatus,
   aiError,
+  isApplied,
   onEnhance,
   onApply,
   onClear,
@@ -221,6 +223,7 @@ export default function AiEnhancer({
       {aiStatus === STATUS.SUCCESS && aiData && (
         <AiResultPanel
           aiData={aiData}
+          isApplied={isApplied}
           onApply={onApply}
           onClear={onClear}
         />

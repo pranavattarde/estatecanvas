@@ -684,6 +684,17 @@ body {
   border-color: #2d2925;
 }
 
+.btn-apply-ai.applied {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #ffffff;
+}
+
+.btn-apply-ai.applied:hover {
+  background: #2f563a;
+  border-color: #2f563a;
+}
+
 /* ============================================================
    PREVIEW PANEL
    ============================================================ */
@@ -934,6 +945,92 @@ body {
   overflow: hidden;
 }
 
+/* AI Marketing Headline supporting banner */
+.post-ai-headline {
+  font-size: clamp(8.5px, 1.85cqw, 18.5px);
+  line-height: 1.25;
+  margin-bottom: clamp(6px, 1.2cqw, 12px);
+  word-break: break-word;
+  animation: postEnter 220ms ease both;
+}
+
+.post-luxury .post-ai-headline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  color: #b8935a;
+  letter-spacing: -0.01em;
+}
+
+.post-minimal .post-ai-headline {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.02em;
+  padding-bottom: 3px;
+  border-bottom: 1.5px dashed #bbbbbb;
+}
+
+.post-midnight .post-ai-headline {
+  font-family: var(--font-elegant);
+  font-style: italic;
+  font-size: clamp(10.5px, 2.25cqw, 22.5px);
+  font-weight: 600;
+  color: #c8a96e;
+  letter-spacing: 0.01em;
+}
+
+/* AI Call-to-Action Banner */
+.post-ai-cta-bar {
+  margin-top: auto;
+  margin-bottom: clamp(4px, 0.9cqw, 9px);
+  padding: clamp(5px, 0.95cqw, 9.5px) clamp(8px, 1.3cqw, 13px);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1cqw, 10px);
+  font-size: clamp(7.5px, 1.3cqw, 13px);
+  line-height: 1.3;
+  animation: postEnter 220ms ease both;
+}
+
+.post-luxury .post-ai-cta-bar {
+  background: rgba(184, 147, 90, 0.12);
+  border: 1px solid rgba(184, 147, 90, 0.35);
+  color: #1a1714;
+  font-weight: 600;
+}
+
+.post-luxury .post-ai-cta-bar .cta-star {
+  color: #b8935a;
+  font-size: 1.1em;
+  flex-shrink: 0;
+}
+
+.post-minimal .post-ai-cta-bar {
+  background: #f5f5f5;
+  border: 1.5px solid #0a0a0a;
+  color: #0a0a0a;
+  font-weight: 700;
+}
+
+.post-minimal .post-ai-cta-bar .cta-star {
+  color: #0a0a0a;
+  flex-shrink: 0;
+}
+
+.post-midnight .post-ai-cta-bar {
+  background: rgba(200, 169, 110, 0.12);
+  border: 1px solid rgba(200, 169, 110, 0.35);
+  color: #f0ead8;
+  font-weight: 500;
+}
+
+.post-midnight .post-ai-cta-bar .cta-star {
+  color: #c8a96e;
+  flex-shrink: 0;
+}
+
 /* ============================================================
    LUXURY TEMPLATE
    ============================================================
@@ -1126,29 +1223,33 @@ body {
   word-break: break-all;
 }
 
-/* Highlights — pinned to bottom of left column */
+/* Highlights */
 .post-luxury .highlights-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-top: auto;
-  padding-top: 5%;
-  border-top: 1px solid rgba(26,23,20,0.08);
+  gap: clamp(4px, 0.75cqw, 7px);
+  margin-bottom: clamp(6px, 1.1cqw, 11px);
 }
 
 .post-luxury .highlight-chip {
-  background: transparent;
+  background: rgba(26, 23, 20, 0.03);
   border: 1px solid rgba(184, 147, 90, 0.45);
-  border-radius: 2px;
-  padding: clamp(2px, 0.45cqw, 4px) clamp(6px, 1.1cqw, 11px);
-  font-size: clamp(5.5px, 1cqw, 10px);
+  border-radius: 3px;
+  padding: clamp(3px, 0.55cqw, 5.5px) clamp(8px, 1.3cqw, 13px);
+  font-size: clamp(6.5px, 1.15cqw, 11.5px);
   font-weight: 500;
-  color: #5a514a;
-  white-space: nowrap;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  color: #3d3833;
+  letter-spacing: 0.015em;
+  text-transform: none;
   display: inline-flex;
   align-items: center;
+  gap: 5px;
+  line-height: 1.3;
+}
+
+.post-luxury .chip-dot {
+  color: #b8935a;
+  font-weight: 700;
 }
 
 /* Right panel SVG decor */
@@ -1296,21 +1397,28 @@ body {
 .post-minimal .highlights-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 5%;
+  gap: clamp(4px, 0.75cqw, 7px);
+  margin-bottom: clamp(6px, 1.1cqw, 11px);
 }
 
 .post-minimal .highlight-chip {
   border: 1.5px solid #0a0a0a;
-  padding: clamp(2px, 0.4cqw, 4px) clamp(6px, 1.1cqw, 11px);
-  font-size: clamp(5.5px, 1cqw, 10px);
+  background: #ffffff;
+  padding: clamp(3px, 0.55cqw, 5.5px) clamp(8px, 1.2cqw, 12px);
+  font-size: clamp(6.5px, 1.15cqw, 11.5px);
   font-weight: 600;
   color: #0a0a0a;
-  white-space: nowrap;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   display: inline-flex;
   align-items: center;
+  gap: 5px;
+  line-height: 1.3;
+}
+
+.post-minimal .chip-dot {
+  color: #0a0a0a;
+  font-size: 0.8em;
 }
 
 /* Price pinned to bottom */
@@ -1562,22 +1670,29 @@ body {
 .post-midnight .highlights-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: auto;
+  gap: clamp(4px, 0.75cqw, 7px);
+  margin-bottom: clamp(6px, 1.1cqw, 11px);
 }
 
 .post-midnight .highlight-chip {
-  border: 1px solid rgba(184, 147, 90, 0.35);
-  border-radius: 1px;
-  padding: clamp(3px, 0.5cqw, 5px) clamp(7px, 1.2cqw, 12px);
-  font-size: clamp(5.5px, 1cqw, 10px);
-  font-weight: 400;
-  color: #b8935a;
-  white-space: nowrap;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  border: 1px solid rgba(184, 147, 90, 0.4);
+  border-radius: 3px;
+  padding: clamp(3px, 0.55cqw, 5.5px) clamp(8px, 1.3cqw, 13px);
+  font-size: clamp(6.5px, 1.15cqw, 11.5px);
+  font-weight: 500;
+  color: #ede7d6;
+  background: rgba(184, 147, 90, 0.08);
+  letter-spacing: 0.02em;
+  text-transform: none;
   display: inline-flex;
   align-items: center;
+  gap: 5px;
+  line-height: 1.3;
+}
+
+.post-midnight .chip-dot {
+  color: #c8a96e;
+  font-weight: 700;
 }
 
 /* Footer */
